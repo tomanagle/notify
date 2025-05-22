@@ -1,7 +1,5 @@
 import { z } from "zod";
 import { errorResponses } from "../../utils/http";
-import { createSelectSchema } from "drizzle-zod";
-import { credentials } from "../../db/schema";
 
 // Common types
 export const mediumEnum = z.enum(["sms", "email", "push"]);

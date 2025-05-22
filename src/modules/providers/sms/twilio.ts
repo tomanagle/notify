@@ -2,7 +2,6 @@ import { SMSProvider } from "../providers.dto";
 import { logger } from "../../../utils/logger";
 import { z } from "zod";
 import { Twilio } from "twilio";
-import { providerCredentialsSchema } from "../providers.schemas";
 
 const credentialsSchema = z.object({
   accountSid: z.string(),

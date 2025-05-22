@@ -56,9 +56,11 @@ export async function createMessageHandler(
 
     try {
       provider.validateSendOptions(payload.data.sendOptions);
-    } catch (error: any) {
+    } catch (error: unknown) {
       request.log.error({ error }, "Error validating send options");
-      return reply.status(400).send(error.message);
+      return reply
+        .status(400)
+        .send(error instanceof Error ? error.message : "Unknown error");
     }
 
     const messagePayload: InferInsertModel<typeof messages> = {

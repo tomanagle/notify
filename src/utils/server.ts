@@ -1,4 +1,4 @@
-import Fastify, { FastifyReply, FastifyRequest } from "fastify";
+import Fastify from "fastify";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import { version } from "../../package.json";
@@ -23,8 +23,6 @@ declare module "fastify" {
     queue: QueueService;
     providerRegistry: ProviderRegistry;
   }
-
-  interface FastifyInstance {}
 }
 
 export async function buildServer({
@@ -38,7 +36,7 @@ export async function buildServer({
 }) {
   const fastify = Fastify({
     logger: true,
-    genReqId(req) {
+    genReqId() {
       return randomUUID();
     },
     requestTimeout: 5_000,

@@ -1,9 +1,6 @@
-import { eq, InferInsertModel, InferSelectModel, isNull } from "drizzle-orm";
+import { eq, InferInsertModel, isNull } from "drizzle-orm";
 import { DB } from "../../db";
 import { messages } from "../../db/schema";
-import { SendPushOptions } from "../providers/providers.schemas";
-import { SendEmailOptions } from "../providers/providers.schemas";
-import { SendSMSOptions } from "../providers/providers.schemas";
 
 export async function createMessage(
   message: InferInsertModel<typeof messages>,

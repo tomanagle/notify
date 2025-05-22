@@ -1,7 +1,4 @@
 import { z } from "zod";
-import { sendSMSOptionsSchema } from "../providers/providers.schemas";
-import { sendPushOptionsSchema } from "../providers/providers.schemas";
-import { sendEmailOptionsSchema } from "../providers/providers.schemas";
 import { errorResponses } from "../../utils/http";
 
 const createMessageBodyBase = z.object({

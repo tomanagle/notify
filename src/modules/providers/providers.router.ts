@@ -8,7 +8,6 @@ import {
   saveCredentialsSchema,
   listCredentialsSchema,
   listProvidersSchema,
-  testProviderSchema,
 } from "./providers.schemas";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 

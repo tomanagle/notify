@@ -9,7 +9,6 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 import {
-  Medium,
   SendEmailOptions,
   SendPushOptions,
   SendSMSOptions,

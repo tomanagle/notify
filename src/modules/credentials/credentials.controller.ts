@@ -2,7 +2,6 @@ import { FastifyReply } from "fastify";
 import { FastifyRequest } from "fastify";
 import { createCredentials } from "./credentials.service";
 import { CreateCredentialsBody } from "./credentials.schema";
-import { ZodError } from "zod";
 
 export async function createCredentialsHandler(
   request: FastifyRequest<{ Body: CreateCredentialsBody }>,
@@ -14,8 +13,10 @@ export async function createCredentialsHandler(
 
   try {
     validProvider.validateCredentials(options);
-  } catch (error: any) {
-    return reply.status(400).send(error.message);
+  } catch (error: unknown) {
+    return reply
+      .status(400)
+      .send(error instanceof Error ? error.message : "Unknown error");
   }
 
   if (!validProvider) {

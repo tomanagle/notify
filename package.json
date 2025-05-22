@@ -9,7 +9,6 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:generate": "drizzle-kit generate",
-    "db:seed": "tsx src/dev/seed.ts",
     "db:migrate": "drizzle-kit migrate",
     "dev:docker": "docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build -d",
     "dev:docker:down": "docker compose -f docker-compose.yml -f docker-compose.dev.yml down"
