@@ -1,0 +1,46 @@
+services:
+  notify-api:
+    container_name: notify-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "1337:1337"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/healthcheck"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    volumes:
+      - ./session-keys:/app/session-keys
+  
+  # prometheus:
+  #   image: prom/prometheus
+  #   container_name: prometheus
+  #   command:
+  #     - '--config.file=/etc/prometheus/prometheus.yml'
+  #   ports:
+  #     - 9090:9090
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./prometheus:/etc/prometheus
+  #     - prom_data:/prometheus
+
+  # grafana:
+  #   image: grafana/grafana
+  #   container_name: grafana
+  #   ports:  
+  #     - 3000:3000
+  #   restart: unless-stopped
+  #   environment:
+  #     - GF_SECURITY_ADMIN_USER=admin
+  #     - GF_SECURITY_ADMIN_PASSWORD=password
+  #   volumes:
+  #     - ./grafana/provisioning:/etc/grafana/provisioning
+  #     - ./grafana/dashboards:/var/lib/grafana/dashboards
+  #     - grafana-storage:/var/lib/grafana
+
+volumes:
+  prom_data:
+  grafana-storage:

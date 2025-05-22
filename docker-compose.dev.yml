@@ -1,0 +1,37 @@
+services:
+  notifydb:
+    container_name: notifydb
+    image: postgres:13
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+
+  notify-api:
+    environment:
+      - DATABASE_URL=postgres://postgres:password@notifydb:5432/postgres
+    command: >
+      sh -c "
+        pnpm db:push &&
+        pnpm dev
+      "
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - notifydb
+
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8080:8080
+
+volumes:
+  pgdata:
