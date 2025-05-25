@@ -24,15 +24,6 @@ const timestamps = {
     .notNull(),
 };
 
-export const users = pgTable("users", {
-  id: text("id")
-    .primaryKey()
-    .$default(() => randomUUID()),
-  email: text("email").unique().notNull(),
-  password: text("password").notNull(),
-  ...timestamps,
-});
-
 export const messageDirection = pgEnum("message_direction", [
   "inbound",
   "outbound",

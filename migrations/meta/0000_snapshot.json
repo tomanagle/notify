@@ -1,236 +1,35 @@
 {
-  "id": "59b546c7-8577-4cf0-b492-897af39b27a7",
+  "id": "ebb76219-930a-46a9-b6ed-72818f4cbe72",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.applications": {
-      "name": "applications",
+    "public.credentials": {
+      "name": "credentials",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
           "type": "text",
           "primaryKey": true,
-          "notNull": true
-        },
-        "job_id": {
-          "name": "job_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "cover_letter": {
-          "name": "cover_letter",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "resume": {
-          "name": "resume",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "status": {
-          "name": "status",
-          "type": "application_status",
-          "typeSchema": "public",
-          "primaryKey": false,
           "notNull": true,
-          "default": "'pending'"
+          "default": "gen_random_uuid()"
         },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "applications_job_id_jobs_id_fk": {
-          "name": "applications_job_id_jobs_id_fk",
-          "tableFrom": "applications",
-          "tableTo": "jobs",
-          "columnsFrom": [
-            "job_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "applications_user_id_users_id_fk": {
-          "name": "applications_user_id_users_id_fk",
-          "tableFrom": "applications",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.jobs": {
-      "name": "jobs",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
+        "provider": {
+          "name": "provider",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "slug": {
-          "name": "slug",
+        "key": {
+          "name": "key",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "status": {
-          "name": "status",
-          "type": "job_status",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'active'"
-        },
-        "keywords": {
-          "name": "keywords",
-          "type": "text[]",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "salary": {
-          "name": "salary",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "search_index": {
-          "name": "search_index",
-          "columns": [
-            {
-              "expression": "(\n          setweight(to_tsvector('english', \"title\"), 'A') ||\n          setweight(to_tsvector('english', \"description\"), 'B')\n      )",
-              "asc": true,
-              "isExpression": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "gin",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "jobs_user_id_users_id_fk": {
-          "name": "jobs_user_id_users_id_fk",
-          "tableFrom": "jobs",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "jobs_slug_unique": {
-          "name": "jobs_slug_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.users": {
-      "name": "users",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "password": {
-          "name": "password",
-          "type": "text",
+        "options": {
+          "name": "options",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": true
         },
@@ -253,35 +52,229 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_email_unique": {
-          "name": "users_email_unique",
+        "credentials_key_unique": {
+          "name": "credentials_key_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "email"
+            "key"
           ]
         }
       },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
+    },
+    "public.messages": {
+      "name": "messages",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "messages_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "2147483647",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "provider": {
+          "name": "provider",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "credentials_id": {
+          "name": "credentials_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "medium": {
+          "name": "medium",
+          "type": "message_medium",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "send_options": {
+          "name": "send_options",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "body": {
+          "name": "body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "direction": {
+          "name": "direction",
+          "type": "message_direction",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sent_at": {
+          "name": "sent_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "error": {
+          "name": "error",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "retries": {
+          "name": "retries",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "correlation_id": {
+          "name": "correlation_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "customer_key": {
+          "name": "customer_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "conversation_id": {
+          "name": "conversation_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "messages_credentials_id_credentials_id_fk": {
+          "name": "messages_credentials_id_credentials_id_fk",
+          "tableFrom": "messages",
+          "tableTo": "credentials",
+          "columnsFrom": [
+            "credentials_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "messages_correlation_id_unique": {
+          "name": "messages_correlation_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "correlation_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.templates": {
+      "name": "templates",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "engine": {
+          "name": "engine",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'hbs'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {
-    "public.application_status": {
-      "name": "application_status",
+    "public.message_direction": {
+      "name": "message_direction",
       "schema": "public",
       "values": [
-        "pending",
-        "accepted",
-        "rejected"
+        "inbound",
+        "outbound"
       ]
     },
-    "public.job_status": {
-      "name": "job_status",
+    "public.message_medium": {
+      "name": "message_medium",
       "schema": "public",
       "values": [
-        "active",
-        "inactive"
+        "sms",
+        "email",
+        "push"
       ]
     }
   },

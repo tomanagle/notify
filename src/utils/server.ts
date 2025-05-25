@@ -4,7 +4,7 @@ import fastifySwaggerUi from "@fastify/swagger-ui";
 import { version } from "../../package.json";
 import { config } from "../config";
 import { prom, reqReplyTime } from "./metrics";
-import { DB, ping } from "../db";
+import { DB, ping, setupDB } from "../db";
 import {
   serializerCompiler,
   validatorCompiler,
@@ -16,6 +16,7 @@ import { credentialsRouter } from "../modules/credentials/credentials.router";
 import { templatesRouter } from "../modules/templates/templates.router";
 import { randomUUID } from "crypto";
 import { providerRouter } from "../modules/providers/providers.router";
+import { TwilioProvider } from "../modules/providers/sms/twilio";
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -25,15 +26,7 @@ declare module "fastify" {
   }
 }
 
-export async function buildServer({
-  db,
-  queue,
-  providerRegistry,
-}: {
-  db: DB;
-  queue: QueueService;
-  providerRegistry: ProviderRegistry;
-}) {
+export async function buildServer({ signal }: { signal: AbortSignal }) {
   const fastify = Fastify({
     logger: true,
     genReqId() {
@@ -41,6 +34,31 @@ export async function buildServer({
     },
     requestTimeout: 5_000,
   });
+
+  const { db } = await setupDB(process.env.DATABASE_URL ?? config.DATABASE_URL);
+
+  try {
+    await ping(db);
+    fastify.log.info("database connected");
+  } catch (e) {
+    fastify.log.error(e, "ping failed");
+    process.exit(1);
+  }
+
+  const providerRegistry = new ProviderRegistry({ db });
+
+  providerRegistry.register("twilio", TwilioProvider);
+
+  const queueController = new AbortController();
+
+  const queue = new QueueService({
+    db,
+    providerRegistry,
+    controller: queueController,
+    signal,
+  });
+
+  queue.startProcessing();
 
   // Add schema validator and serializer
   fastify.setValidatorCompiler(validatorCompiler);
@@ -111,5 +129,5 @@ export async function buildServer({
     });
   });
 
-  return fastify;
+  return { server: fastify, db, queue, providerRegistry };
 }

@@ -9,6 +9,8 @@ export async function setupDB(url: string | undefined = config.DATABASE_URL) {
     throw new Error("DATABASE_URL is not set");
   }
 
+  console.log({ url });
+
   const client = postgres(url, {
     max: 20,
   });

@@ -18,6 +18,8 @@ beforeAll(async () => {
   container = await new PostgreSqlContainer().start();
 
   const DATABASE_URL = container.getConnectionUri();
+
+  console.log({ DATABASE_URL });
   process.env.DATABASE_URL = DATABASE_URL;
 
   const database = await setupDB(DATABASE_URL);
@@ -32,8 +34,9 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   await db.execute(sql`
-    TRUNCATE TABLE users CASCADE;
     TRUNCATE TABLE messages CASCADE;
+    TRUNCATE TABLE credentials CASCADE;
+    TRUNCATE TABLE templates CASCADE;
   `);
 });
 

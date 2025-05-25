@@ -12,7 +12,7 @@ type QueueServiceOptions = {
   db: DB;
   providerRegistry: ProviderRegistry;
   controller: AbortController;
-  ctx: AbortSignal;
+  signal: AbortSignal;
   pollInterval?: number;
 };
 
@@ -26,17 +26,17 @@ export class QueueService {
 
   private logger = logger.child({ module: "QueueService" });
 
-  private ctx: AbortSignal;
+  private signal: AbortSignal;
 
   constructor(options: QueueServiceOptions) {
     this.db = options.db;
     this.providerRegistry = options.providerRegistry;
     this.pollInterval = options.pollInterval ?? this.pollInterval;
-    this.ctx = options.ctx;
+    this.signal = options.signal;
   }
 
   async enqueue({ messageId }: { messageId: number }) {
-    if (this.ctx.aborted) {
+    if (this.signal.aborted) {
       throw new Error("Queue processing aborted");
     }
 
@@ -62,7 +62,7 @@ export class QueueService {
   }
 
   private async processQueue(interval?: number) {
-    if (this.ctx.aborted) {
+    if (this.signal.aborted) {
       this.logger.info("Queue processing aborted");
       return;
     }
